@@ -1,21 +1,52 @@
 let currentPlayer = "x";
-let squareValues = [
-	"square-0",
-	"square-1",
-	"square-2",
-	"square-3",
-	"square-4",
-	"square-5",
-	"square-6",
-	"square-7",
-	"square-8",
-];
+let gameWinner = "";
+let squareValues = ["", "", "", "", "", "", "", "", ""];
+
+let checkStatus = () => {
+	for (let index = 0; index < 9; index += 3) {
+		if (
+			squareValues[index] !== "" &&
+			squareValues[index] === squareValues[index + 1] &&
+			squareValues[index] === squareValues[index + 2]
+		) {
+			gameWinner = squareValues[index];
+		}
+	}
+	for (let index = 0; index < 3; index++) {
+		if (
+			squareValues[index] !== "" &&
+			squareValues[index] === squareValues[index + 3] &&
+			squareValues[index] === squareValues[index + 6]
+		) {
+			gameWinner = squareValues[index];
+		}
+	}
+	if (squareValues[0] && squareValues[4] && squareValues[8]) {
+		gameWinner = squareValues[0];
+	}
+	if (squareValues[2] && squareValues[4] && squareValues[6]) {
+		gameWinner = squareValues[2];
+	}
+	let fillBoard = true;
+	for (let index = 0; index < 9; index++) {
+		if (squareValues[index] === "") {
+			fillBoard = false;
+		}
+	}
+	if (fillBoard) {
+		gameWinner = "Tie";
+	}
+	if (gameWinner !== "") {
+		document.getElementById(
+			"game-status"
+		).innerHTML = `Winner: ${gameWinner.toUpperCase()}`;
+	}
+};
 
 window.addEventListener("DOMContentLoaded", () => {
 	const board = document.getElementById("tic-tac-toe-board");
 
 	let fillSquare = (event) => {
-		// debugger;
 		const squareId = event.target.id;
 
 		if (!squareId.startsWith("square-")) return;
@@ -34,6 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		} else {
 			currentPlayer = "x";
 		}
+		checkStatus();
 	};
 	board.addEventListener("click", fillSquare);
 });
