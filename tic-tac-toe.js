@@ -21,10 +21,10 @@ let checkStatus = () => {
 			gameWinner = squareValues[index];
 		}
 	}
-	if (squareValues[0] === squareValues[4] === squareValues[8]) {
+	if (squareValues[0] === squareValues[4] && squareValues[8]) {
 		gameWinner = squareValues[0];
 	}
-	if (squareValues[2] === squareValues[4] === squareValues[6]) {
+	if (squareValues[2] === squareValues[4] && squareValues[6]) {
 		gameWinner = squareValues[2];
 	}
 	let fillBoard = true;
@@ -33,7 +33,7 @@ let checkStatus = () => {
 			fillBoard = false;
 		}
 	}
-	if (fillBoard) {
+	if (fillBoard && gameWinner === "") {
 		gameWinner = "Tie";
 	}
 	if (gameWinner !== "") {
@@ -69,17 +69,17 @@ window.addEventListener("DOMContentLoaded", () => {
 	};
 	board.addEventListener("click", fillSquare);
 
-    document.getElementById('new-game').addEventListener('click', (event) => {
-        gameWinner = '';
-        document.getElementById('game-status').innerHTML = '';
+	document.getElementById("new-game").addEventListener("click", (event) => {
+		gameWinner = "";
+		document.getElementById("game-status").innerHTML = "";
 
-        for (let i = 0; i < 9; i++) {
-            document.getElementById(`square-${i}`).innerHTML = '';
-        }
-        currentPlayer = 'x'
+		for (let i = 0; i < 9; i++) {
+			document.getElementById(`square-${i}`).innerHTML = "";
+		}
+		currentPlayer = "x";
 
-        document.getElementById('new-game').disable = true;
+		document.getElementById("new-game").disable = true;
 
-        squareValues = ["", "", "", "", "", "", "", "", ""];
-    })
+		squareValues = ["", "", "", "", "", "", "", "", ""];
+	});
 });
