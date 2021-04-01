@@ -1,6 +1,43 @@
 let currentPlayer = "x";
 let gameWinner = "";
 let squareValues = ["", "", "", "", "", "", "", "", ""];
+let key = 'game-save-tic-tac-toe'
+
+let saveGame = () => {
+    const savedObj = {
+        currentPlayer, squareValues, gameStatus
+    };
+    window.localStorage.setItem(key, JSON.stringify(savedObj))
+}
+
+let loadGame = () => {
+    let savedGame = JSON.parse(window.localStorage.getItem(key));
+
+    if (savedGame === null) return;
+
+    currentPlayer = savedObj.currentPlayer;
+    squareValues = savedObj.squareValues;
+    gameWinner = savedObj.gameWinner;
+
+    for (let i = 0; i < 9; i++) {
+        if (squareValues[i] !== '') {
+            const img = document.createElement('img')
+            img.src = `https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-${squareValues[i]}.svg`;
+            document.getElementById(`square-${i}`).appendChild(img);
+        }
+
+        if (gameWinner !== '') {
+            document.getElementById('game-status').innerHTML = `Winner: ${gameWinner.toUpperCase()}`;
+            document.getElementById('new-game').disable = false;
+            document.getElementById('give-up').disable = true;
+        } else {
+            document.getElementById('game-status').innerHTML = '';
+            document.getElementById('new-game').disable = true;
+            document.getElementById('give-up').disable = false;
+        }
+
+    }
+};
 
 let checkStatus = () => {
 	for (let index = 0; index < 9; index += 3) {
@@ -21,10 +58,10 @@ let checkStatus = () => {
 			gameWinner = squareValues[index];
 		}
 	}
-	if (squareValues[0] === squareValues[4] && squareValues[8]) {
+	if (squareValues[0] === squareValues[4] && squareValues[0] === squareValues[8]) {
 		gameWinner = squareValues[0];
 	}
-	if (squareValues[2] === squareValues[4] && squareValues[6]) {
+	if (squareValues[2] === squareValues[4] && squareValues[2] === squareValues[6]) {
 		gameWinner = squareValues[2];
 	}
 	let fillBoard = true;
@@ -40,10 +77,13 @@ let checkStatus = () => {
 		document.getElementById(
 			"game-status"
 		).innerHTML = `Winner: ${gameWinner.toUpperCase()}`;
+
+        document.getElementById('new-game').disable = false;
 	}
 };
 
 window.addEventListener("DOMContentLoaded", () => {
+    loadGame();
 	const board = document.getElementById("tic-tac-toe-board");
 
 	let fillSquare = (event) => {
@@ -66,6 +106,7 @@ window.addEventListener("DOMContentLoaded", () => {
 			currentPlayer = "x";
 		}
 		checkStatus();
+        saveGame();
 	};
 	board.addEventListener("click", fillSquare);
 
@@ -79,7 +120,26 @@ window.addEventListener("DOMContentLoaded", () => {
 		currentPlayer = "x";
 
 		document.getElementById("new-game").disable = true;
+        document.getElementById('give-up').disable = false;
 
 		squareValues = ["", "", "", "", "", "", "", "", ""];
+        saveGame();
 	});
+
+    document.getElementById("give-up").addEventListener("click", (event) => {
+        if (currentPlayer === 'x') {
+            gameWinner = 'o'
+            document.getElementById(
+                "game-status"
+            ).innerHTML = `Winner: ${gameWinner.toUpperCase()}`;
+        } else {
+            gameWinner = 'x'
+            document.getElementById(
+                "game-status"
+            ).innerHTML = `Winner: ${gameWinner.toUpperCase()}`;
+        }
+        document.getElementById("give-up").disable = true;
+        document.getElementById('new-game').disable = false;
+        saveGame();
+    })
 });
